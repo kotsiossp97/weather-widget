@@ -1,0 +1,61 @@
+.weather-widget-root {
+  --ww-background: #fff;
+  --ww-surface: rgba(255, 255, 255, 0.86);
+  --ww-text: #1f2421;
+  --ww-muted: #5d675e;
+  --ww-border: rgba(31, 36, 33, 0.12);
+  --ww-accent: #0d7c66;
+  --ww-accent-soft: rgba(13, 124, 102, 0.16);
+  --ww-white: #fff;
+  --ww-scrollbar-track: color-mix(
+    in srgb,
+    var(--ww-background) 88%,
+    transparent
+  );
+  --ww-scrollbar-thumb: color-mix(
+    in srgb,
+    var(--ww-accent) 66%,
+    var(--ww-border)
+  );
+  --ww-scrollbar-thumb-hover: var(--ww-accent);
+  --ww-radius: 28px;
+  --ww-font: "IBM Plex Sans", "Segoe UI", sans-serif;
+
+  * {
+    margin: 0;
+    padding: 0;
+  }
+}
+
+.ww-theme-dark {
+  --ww-background: #152028;
+  --ww-surface: rgba(14, 25, 34, 0.9);
+  --ww-text: #f0f6f7;
+  --ww-muted: #aac0c5;
+  --ww-border: rgba(240, 246, 247, 0.12);
+  --ww-accent: #6de6c0;
+  --ww-accent-soft: rgba(109, 230, 192, 0.18);
+  --ww-scrollbar-track: color-mix(in srgb, var(--ww-background) 76%, #000 24%);
+  --ww-scrollbar-thumb: color-mix(in srgb, var(--ww-accent) 58%, #6f8891);
+  --ww-scrollbar-thumb-hover: color-mix(
+    in srgb,
+    var(--ww-accent) 85%,
+    var(--ww-white)
+  );
+}
+
+.ww-theme-auto {
+  color-scheme: light dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  .ww-theme-auto {
+    --ww-background: #152028;
+    --ww-surface: rgba(14, 25, 34, 0.9);
+    --ww-text: #f0f6f7;
+    --ww-muted: #aac0c5;
+    --ww-border: rgba(240, 246, 247, 0.12);
+    --ww-accent: #6de6c0;
+    --ww-accent-soft: rgba(109, 230, 192, 0.18);
+  }
+}

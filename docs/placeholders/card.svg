@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="720" viewBox="0 0 1200 720" role="img" aria-label="Card layout placeholder">
+  <rect width="1200" height="720" fill="#e8efe7" />
+  <rect x="100" y="96" width="480" height="528" rx="36" fill="#fffaf2" stroke="#d7d1c7" />
+  <rect x="620" y="96" width="480" height="528" rx="36" fill="#152028" stroke="#28404d" />
+  <text x="170" y="220" fill="#1f2421" font-size="48" font-family="IBM Plex Sans, sans-serif">Card layout</text>
+  <text x="170" y="290" fill="#5d675e" font-size="28" font-family="IBM Plex Sans, sans-serif">Screenshot placeholder</text>
+</svg>

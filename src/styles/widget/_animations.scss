@@ -1,0 +1,80 @@
+.ww-badge-live {
+  animation: wwPulse 1.8s ease-in-out infinite;
+}
+
+.ww-skeleton {
+  background: rgba(127, 127, 127, 0.14);
+  border-radius: 16px;
+  min-height: 24px;
+  overflow: hidden;
+  position: relative;
+
+  &::after {
+    animation: wwShimmer 1.4s ease-in-out infinite;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.4),
+      transparent
+    );
+    content: "";
+    inset: 0;
+    position: absolute;
+    transform: translateX(-100%);
+  }
+}
+
+.ww-skeleton-title {
+  height: 22px;
+  width: 42%;
+}
+
+.ww-skeleton-hero {
+  height: 108px;
+}
+
+.ww-skeleton-grid {
+  height: 156px;
+}
+
+.ww-icon {
+  display: block;
+  flex-shrink: 0;
+  object-fit: contain;
+}
+
+@keyframes wwShimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes wwFloat {
+  50% {
+    transform: translateY(-2px);
+  }
+}
+
+@keyframes wwDrift {
+  50% {
+    transform: translateX(2px);
+  }
+}
+
+@keyframes wwRain {
+  50% {
+    transform: translateY(2px);
+  }
+}
+
+@keyframes wwPulse {
+  50% {
+    opacity: 0.6;
+  }
+}
+
+@keyframes wwSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}

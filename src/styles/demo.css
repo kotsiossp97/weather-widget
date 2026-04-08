@@ -1,0 +1,61 @@
+:root {
+  color-scheme: light dark;
+}
+
+body {
+  font-family: "IBM Plex Sans", "Segoe UI", sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+.demo-page {
+  box-sizing: border-box;
+  margin: 0 auto;
+  padding: 48px 20px 64px;
+}
+
+.demo-hero {
+  margin-bottom: 28px;
+}
+
+.demo-eyebrow {
+  font-size: 0.78rem;
+  letter-spacing: 0.14em;
+  margin: 0 0 10px;
+  text-transform: uppercase;
+}
+
+.demo-hero h1 {
+  /* max-width: 12ch; */
+  font-size: clamp(2.4rem, 7vw, 4.8rem);
+  line-height: 0.95;
+  margin: 0;
+}
+
+.demo-copy {
+  font-size: 1.02rem;
+  line-height: 1.6;
+}
+
+.demo-widgets-section {
+  box-sizing: border-box;
+  display: grid;
+  gap: 1rem;
+  padding-inline: clamp(1rem, 8vw, 10rem);
+  width: 100%;
+}
+
+.demo-widgets-section > * {
+  min-width: 0;
+}
+
+@media screen and (max-width: 600px) {
+  .demo-page {
+    padding-inline: 0.75rem;
+  }
+
+  .demo-widgets-section {
+    gap: 0.75rem;
+    padding-inline: 0;
+  }
+}

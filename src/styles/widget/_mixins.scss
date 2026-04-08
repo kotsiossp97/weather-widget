@@ -1,0 +1,63 @@
+@use "sass:map";
+
+$breakpoints: (
+  xs: 480px,
+  sm: 720px,
+  md: 960px,
+  lg: 1200px,
+);
+
+@mixin down($size) {
+  @if not map.has-key($breakpoints, $size) {
+    @error 'Unknown breakpoint `#{$size}`.';
+  }
+
+  @if $size == xs {
+    @media (max-width: 480px) {
+      @content;
+    }
+  } @else if $size == sm {
+    @media (max-width: 720px) {
+      @content;
+    }
+  } @else if $size == md {
+    @media (max-width: 960px) {
+      @content;
+    }
+  } @else if $size == lg {
+    @media (max-width: 1200px) {
+      @content;
+    }
+  }
+}
+
+@mixin up($size) {
+  @if not map.has-key($breakpoints, $size) {
+    @error 'Unknown breakpoint `#{$size}`.';
+  }
+
+  @if $size == xs {
+    @media (min-width: 480px) {
+      @content;
+    }
+  } @else if $size == sm {
+    @media (min-width: 720px) {
+      @content;
+    }
+  } @else if $size == md {
+    @media (min-width: 960px) {
+      @content;
+    }
+  } @else if $size == lg {
+    @media (min-width: 1200px) {
+      @content;
+    }
+  }
+}
+
+@mixin fill-container {
+  box-sizing: border-box;
+  inline-size: 100%;
+  max-inline-size: 100%;
+  min-inline-size: 0;
+}

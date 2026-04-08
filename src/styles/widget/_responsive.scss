@@ -1,0 +1,113 @@
+@use "./mixins" as *;
+
+.ww-density-compact {
+  .ww-panel {
+    padding: 12px;
+  }
+
+  .ww-current h2 {
+    font-size: clamp(1.8rem, 8vw, 2.8rem);
+  }
+}
+
+@include down(sm) {
+  .ww-panel,
+  .ww-loading,
+  .ww-error {
+    padding: 10px;
+  }
+
+  .ww-layout,
+  .ww-stack,
+  .ww-forecast-hero,
+  .ww-details-grid,
+  .ww-rail,
+  .ww-forecast-grid {
+    gap: 8px;
+  }
+
+  .ww-toolbar,
+  .ww-section-head {
+    margin-bottom: 10px;
+  }
+
+  .ww-toolbar-main {
+    flex-wrap: wrap;
+  }
+
+  .ww-location-chip {
+    max-inline-size: 140px;
+    padding: 7px 10px;
+  }
+
+  .ww-rail {
+    --ww-rail-card-width: 108px;
+  }
+
+  .ww-current-main {
+    gap: 5px;
+  }
+}
+
+@include down(xs) {
+  .ww-shell {
+    border-radius: calc(var(--ww-radius) - 2px);
+    padding: 15px 20px;
+  }
+
+  .ww-panel,
+  .ww-loading,
+  .ww-error {
+    padding: 10px 15px;
+  }
+
+  .ww-layout,
+  .ww-stack,
+  .ww-forecast-hero,
+  .ww-details-grid,
+  .ww-rail,
+  .ww-forecast-grid {
+    gap: 6px;
+  }
+
+  .ww-toolbar {
+    margin-bottom: 8px;
+  }
+
+  .ww-toolbar-main {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .ww-toolbar-main h1 {
+    font-size: 1.1rem;
+  }
+
+  .ww-button {
+    padding: 8px 12px;
+  }
+
+  .ww-mini-card,
+  .ww-day-card,
+  .ww-detail-item {
+    padding: 10px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .weather-widget-root,
+  .weather-widget-root * {
+    scroll-behavior: auto;
+  }
+
+  .weather-widget-root .ww-icon-spin,
+  .weather-widget-root .ww-icon-float,
+  .weather-widget-root .ww-icon-drift,
+  .weather-widget-root .ww-icon-rain,
+  .weather-widget-root .ww-icon-pulse,
+  .weather-widget-root .ww-badge-live,
+  .weather-widget-root .ww-skeleton::after {
+    animation: none !important;
+  }
+}

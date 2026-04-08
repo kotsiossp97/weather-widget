@@ -1,0 +1,218 @@
+.ww-button {
+  appearance: none;
+  background: var(--ww-accent-soft);
+  border: 0;
+  border-radius: 999px;
+  color: var(--ww-accent);
+  cursor: pointer;
+  font: inherit;
+  font-weight: 600;
+  padding: 10px 16px;
+
+  &:hover {
+    filter: brightness(1.04);
+  }
+}
+
+.ww-location-chip {
+  appearance: none;
+  background: color-mix(in srgb, var(--ww-surface) 70%, transparent);
+  border: 1px solid var(--ww-border);
+  border-radius: 999px;
+  color: var(--ww-muted);
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 600;
+  line-height: 1;
+  max-inline-size: 170px;
+  overflow: hidden;
+  padding: 8px 12px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  &:hover {
+    border-color: color-mix(in srgb, var(--ww-accent) 35%, var(--ww-border));
+    color: var(--ww-text);
+  }
+}
+
+.ww-location-chip-active {
+  background: var(--ww-accent-soft);
+  border-color: color-mix(in srgb, var(--ww-accent) 45%, var(--ww-border));
+  color: var(--ww-accent);
+}
+
+.ww-current-main {
+  align-items: center;
+  display: flex;
+  gap: 14px;
+  justify-content: center;
+  min-inline-size: 0;
+
+  .ww-current-icon {
+    .ww-icon-themed {
+      color: var(--ww-accent);
+    }
+  }
+
+  .ww-current-info {
+    text-align: center;
+  }
+}
+
+.ww-current h2 {
+  font-size: clamp(2.2rem, 8vw, 3.8rem);
+  line-height: 0.95;
+  margin: 0;
+}
+
+.ww-summary,
+.ww-current-meta,
+.ww-mini-card span,
+.ww-detail-item span,
+.ww-temp-range .ww-temp-separator,
+.ww-temp-range .ww-temp-low {
+  color: var(--ww-muted);
+  text-transform: capitalize;
+}
+
+.ww-current-meta {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  font-size: 0.9rem;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.ww-badge {
+  align-items: center;
+  background: var(--ww-accent-soft);
+  border-radius: 999px;
+  color: var(--ww-accent);
+  display: inline-flex;
+  font-weight: 700;
+  line-height: 1.5;
+  padding: 4px 10px;
+}
+
+.ww-details-grid {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(auto-fit, minmax(112px, 1fr));
+}
+
+.ww-detail-item,
+.ww-mini-card,
+.ww-day-card {
+  background: color-mix(in srgb, var(--ww-background) 76%, transparent);
+  border: 1px solid color-mix(in srgb, var(--ww-border) 80%, transparent);
+  border-radius: max(calc(var(--ww-radius) - 4px), 0px);
+}
+
+.ww-layout-simple {
+  .ww-current-main {
+    gap: 10px;
+  }
+
+  .ww-current .ww-current-icon {
+    inline-size: 98px;
+
+    .ww-icon-themed,
+    .ww-icon-colored {
+      max-inline-size: 100%;
+    }
+  }
+
+  .ww-current h2 {
+    font-size: clamp(1.9rem, 6.6vw, 2.9rem);
+  }
+
+  .ww-day-card {
+    border-radius: max(calc(var(--ww-radius) - 12px), 0px);
+    gap: 5px;
+    padding: 10px;
+
+    .ww-mini-time {
+      font-size: 0.78rem;
+      letter-spacing: 0.05em;
+    }
+  }
+}
+
+.ww-detail-item {
+  display: grid;
+  gap: 4px;
+  padding: 12px;
+}
+
+.ww-detail-item strong,
+.ww-mini-card strong,
+.ww-day-card strong {
+  font-size: 1rem;
+}
+
+.ww-rail,
+.ww-forecast-grid {
+  box-sizing: border-box;
+  display: grid;
+  gap: 10px;
+  max-inline-size: 100%;
+  min-inline-size: 0;
+}
+
+.ww-rail {
+  --ww-rail-card-width: 124px;
+  align-items: stretch;
+  display: flex;
+  justify-content: flex-start;
+  -webkit-overflow-scrolling: touch;
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
+  padding-bottom: 2px;
+  scrollbar-gutter: stable;
+}
+
+.ww-rail > .ww-mini-card,
+.ww-rail > .ww-day-card {
+  flex: 0 0 var(--ww-rail-card-width);
+}
+
+.ww-forecast-grid {
+  grid-template-columns: repeat(auto-fit, minmax(124px, 1fr));
+}
+
+.ww-mini-card,
+.ww-day-card {
+  display: grid;
+  gap: 7px;
+  justify-items: start;
+  padding: 12px;
+  // color: var(--ww-text);
+
+  .ww-icon-themed,
+  .ww-icon-colored {
+    margin: 0 auto;
+  }
+
+  .ww-icon-themed {
+    color: var(--ww-accent);
+  }
+}
+
+.ww-mini-time {
+  font-size: 0.86rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.ww-temp-range {
+  align-items: baseline;
+  display: inline-flex;
+  gap: 6px;
+  justify-content: center;
+  margin: 0;
+  width: 100%;
+}

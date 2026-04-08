@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Weather Widget CDN Demo</title>
+    <link rel="stylesheet" href="../src/styles/demo.css" />
+    <link rel="stylesheet" href="../dist/style.css" />
+  </head>
+
+  <style>
+    .weather-widget-root {
+      --ww-accent: #ffc813;
+      --ww-accent-soft: #7e714e;
+    }
+  </style>
+  <body>
+    <div class="demo-page">
+      <div id="cdn-widget-light"></div>
+      <br />
+      <div id="cdn-widget-light-2"></div>
+      <br />
+      <div id="cdn-widget-dark"></div>
+      <br />
+      <div id="cdn-widget-dark-2"></div>
+    </div>
+    <script src="../dist/weather-widget.umd.js"></script>
+    <script>
+      const lightWidget = new window.WeatherWidget({
+        location: { lat: 35.1856, lon: 33.3823, name: "Nicosia" },
+        layout: "horizontal",
+        theme: "light",
+        modules: {
+          current: true,
+          daily: { enabled: true, days: 7 },
+        },
+      });
+      lightWidget.mount("#cdn-widget-light");
+
+      const lightWidget2 = new window.WeatherWidget({
+        location: { lat: 35.1856, lon: 33.3823, name: "Nicosia" },
+        layout: "horizontal",
+        theme: "light",
+        icons: { colorMode: "colored", style: "static" },
+        modules: {
+          current: true,
+          daily: { enabled: true, days: 7 },
+        },
+      });
+      lightWidget2.mount("#cdn-widget-light-2");
+
+      const darkWidget = new window.WeatherWidget({
+        location: { lat: 35.1856, lon: 33.3823, name: "Nicosia" },
+        layout: "horizontal",
+        theme: "dark",
+        modules: {
+          current: true,
+          daily: { enabled: true, days: 7 },
+        },
+      });
+
+      darkWidget.mount("#cdn-widget-dark");
+
+      const darkWidget2 = new window.WeatherWidget({
+        location: { lat: 35.1856, lon: 33.3823, name: "Nicosia" },
+        layout: "horizontal",
+        theme: "dark",
+        icons: { colorMode: "colored", style: "animated" },
+        modules: {
+          current: true,
+          daily: { enabled: true, days: 7 },
+        },
+      });
+
+      darkWidget2.mount("#cdn-widget-dark-2");
+    </script>
+  </body>
+</html>

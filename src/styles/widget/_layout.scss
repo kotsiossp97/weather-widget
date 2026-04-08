@@ -1,0 +1,129 @@
+@use "./mixins" as *;
+
+.ww-toolbar,
+.ww-section-head,
+.ww-current-main,
+.ww-current-meta,
+.ww-forecast-hero,
+.ww-layout,
+.ww-stack,
+.ww-details-grid,
+.ww-rail,
+.ww-forecast-grid,
+.ww-loading {
+  position: relative;
+  z-index: 1;
+}
+
+.ww-toolbar {
+  display: grid;
+  gap: 12px;
+  margin-inline: 16px;
+  margin-bottom: 16px;
+}
+
+.ww-toolbar-main {
+  align-items: center;
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+
+  h1 {
+    font-size: 1.35rem;
+    margin: 0;
+  }
+}
+
+.ww-location-switcher {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.ww-section-head {
+  align-items: baseline;
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
+  margin-bottom: 14px;
+
+  h3 {
+    font-size: 1.1rem;
+    margin: 0;
+  }
+
+  span {
+    color: var(--ww-muted);
+  }
+}
+
+.ww-layout,
+.ww-stack {
+  @include fill-container;
+  display: grid;
+  gap: 14px;
+}
+
+.ww-layout-forecast .ww-stack,
+.ww-layout-card .ww-stack {
+  margin-top: 14px;
+}
+
+.ww-forecast-hero {
+  display: grid;
+  gap: 14px;
+  min-inline-size: 0;
+}
+
+.ww-layout-horizontal {
+  align-items: stretch;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.ww-layout-horizontal-single {
+  flex-wrap: nowrap;
+}
+
+.ww-layout-horizontal .ww-horizontal-current,
+.ww-layout-horizontal .ww-horizontal-forecast {
+  align-self: stretch;
+  display: flex;
+}
+
+.ww-layout-horizontal .ww-horizontal-current {
+  flex: 0 1;
+  max-inline-size: 700px;
+}
+
+.ww-layout-horizontal .ww-horizontal-forecast {
+  flex: 1 1 300px;
+  min-inline-size: 300px;
+}
+
+.ww-current {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.ww-layout-horizontal .ww-horizontal-current > .ww-current,
+.ww-layout-horizontal .ww-horizontal-forecast > .ww-daily {
+  block-size: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.ww-layout-horizontal .ww-daily .ww-rail {
+  --ww-rail-card-width: 120px;
+}
+
+.ww-layout-simple .ww-current {
+  margin: 0;
+}
+
+.ww-layout-simple .ww-daily-grid .ww-forecast-grid {
+  grid-template-columns: repeat(auto-fit, minmax(102px, 1fr));
+}

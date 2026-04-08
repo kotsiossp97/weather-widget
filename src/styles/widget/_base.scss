@@ -1,0 +1,51 @@
+@use "./mixins" as *;
+
+.ww-eyebrow,
+.ww-kicker {
+  color: var(--ww-muted);
+  font-size: 0.78rem;
+  letter-spacing: 0.14em;
+  margin: 0 0 10px;
+  text-transform: uppercase;
+}
+
+.weather-widget-root {
+  @include fill-container;
+  color: var(--ww-text);
+  display: block;
+  font-family: var(--ww-font);
+  overflow: visible;
+}
+
+.ww-shell {
+  @include fill-container;
+  background: var(--ww-background);
+  border-radius: calc(var(--ww-radius) + 2px);
+  overflow: hidden;
+}
+
+.ww-panel {
+  @include fill-container;
+  background: var(--ww-surface);
+  border: 1px solid var(--ww-border);
+  border-radius: var(--ww-radius);
+  padding: 16px;
+}
+
+.ww-loading,
+.ww-error {
+  @include fill-container;
+  background: var(--ww-surface);
+  border: 1px solid var(--ww-border);
+  border-radius: calc(var(--ww-radius) + 2px);
+  display: grid;
+  gap: 14px;
+  padding: 18px;
+}
+
+.ww-error {
+  p,
+  h3 {
+    margin: 0;
+  }
+}
