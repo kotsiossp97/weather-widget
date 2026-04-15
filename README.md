@@ -8,6 +8,12 @@ Framework-agnostic weather widget with a small embeddable API for bundlers and p
 npm install openmeteo-weather-widget
 ```
 
+## Publishing
+
+The repository includes a GitHub Actions workflow that publishes the package to npm when a GitHub release is published or when the workflow is started manually from the Actions tab.
+
+Before using it, add an `NPM_TOKEN` repository secret with permission to publish `openmeteo-weather-widget` on npm.
+
 ## NPM usage
 
 ```ts
