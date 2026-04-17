@@ -8,12 +8,6 @@ Framework-agnostic weather widget with a small embeddable API for bundlers and p
 npm install openmeteo-weather-widget
 ```
 
-## Publishing
-
-The repository includes a GitHub Actions workflow that publishes the package to npm when a GitHub release is published or when the workflow is started manually from the Actions tab.
-
-Before using it, add an `NPM_TOKEN` repository secret with permission to publish `openmeteo-weather-widget` on npm.
-
 ## NPM usage
 
 ```ts
@@ -77,30 +71,30 @@ widget.unmount();
 
 ## Configuration reference
 
-| Option                | Type                                            | Default               | Notes                                                                                                              |
-| --------------------- | ----------------------------------------------- | --------------------- | ------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------- | -------------------------------------- | ------------------------ |
-| `location`            | `{ lat, lon, name? }`                           | optional              | Single-location shorthand. If `locations` is absent, this location is used.                                        |
-| `locations`           | `Array<{ lat, lon, name? }>`                    | optional              | Enables location tabs in the widget header and fetches weather per selected location.                              |
-| `activeLocationIndex` | `number`                                        | `0`                   | Initial selected location index when `locations` is provided.                                                      |
-| `units`               | `"metric"                                       | "imperial"`           | `"metric"`                                                                                                         | Controls temperature, wind, and precipitation formatting.   |
-| `theme`               | `"light"                                        | "dark"                | "auto"`                                                                                                            | `"auto"`                                                    | `auto` follows `prefers-color-scheme`. |
-| `layout`              | `"compact"                                      | "card"                | "forecast"                                                                                                         | "horizontal"`                                               | `"card"`                               | Four responsive presets. |
-| `density`             | `"comfortable"                                  | "compact"`            | `"comfortable"`                                                                                                    | Tightens spacing and typography.                            |
-| `modules.current`     | `boolean`                                       | `true`                | Enables the hero/current conditions block.                                                                         |
-| `modules.details`     | `{ enabled, fields }`                           | enabled               | Supports `feelsLike`, `humidity`, `wind`, `precip`, `uv`, `shortwaveRadiation`, `cloudCover`, `sunrise`, `sunset`. |
-| `modules.hourly`      | `{ enabled, hours, stepHours }`                 | `12`, `1`             | Works with `6/12/24/48` and `1h/3h` style setups.                                                                  |
-| `modules.daily`       | `{ enabled, days }`                             | `5`                   | Supports short or extended forecast strips.                                                                        |
-| `modules.order`       | `WidgetModuleName[]`                            | layout-specific       | Reorders sections where the layout allows it.                                                                      |
-| `icons`               | `{ style, pack }`                               | animated default pack | Falls back to static when reduced motion is requested.                                                             |
-| `refreshMinutes`      | `number`                                        | `15`                  | Automatic polling; set `0` to disable.                                                                             |
-| `cache`               | `{ enabled, ttlMinutes, staleWhileRevalidate }` | enabled, `15`, `true` | Uses `localStorage` keyed by provider and location.                                                                |
-| `provider`            | `string                                         | WeatherProvider`      | `"open-meteo"`                                                                                                     | Inject a custom provider instance or register one globally. |
-| `apiKey`              | `string`                                        | optional              | Reserved for key-based providers.                                                                                  |
-| `locale`              | `string`                                        | browser locale        | Used for date and time formatting (override to force a specific locale).                                           |
-| `timeFormat`          | `"auto" \| "12h" \| "24h"`                      | `"auto"`              | Controls 12-hour or 24-hour clock display for widget times.                                                        |
-| `themeTokens`         | partial token object                            | optional              | Override colors, radius, or font family.                                                                           |
-| `hooks`               | formatting callbacks                            | optional              | Override temperature and wind formatting.                                                                          |
-| `onError`             | `(error) => void`                               | optional              | Called for fetch or provider failures.                                                                             |
+| Option                | Type                                            | Default               | Available Options         | Notes                                                                                                              |
+| --------------------- | ----------------------------------------------- | --------------------- | ------------------------- | ------------------------------------------------------------------------------------------------------------------ |
+| `location`            | `{ lat, lon, name? }`                           | optional              |                           | Single-location shorthand. If `locations` is absent, this location is used.                                        |
+| `locations`           | `Array<{ lat, lon, name? }>`                    | optional              |                           | Enables location tabs in the widget header and fetches weather per selected location.                              |
+| `activeLocationIndex` | `number`                                        | `0`                   |                           | Initial selected location index when `locations` is provided.                                                      |
+| `units`               | `Units`                                         | `"imperial"`          | `"metric" "imperial"`     | Controls temperature, wind, and precipitation formatting.                                                          |
+| `theme`               | `"light"                                        | `"dark"`              | `"light" "dark"  "auto"`  | `auto` follows `prefers-color-scheme`.                                                                             |
+| `layout`              | `"compact"                                      | `"card"`              |                           | "forecast", `"horizontal"`, `"card"` Four responsive presets.                                                      |
+| `density`             | `Density`                                       | `"compact"`           | `"comfortable" "compact"` | `"comfortable"` Tightens spacing and typography.                                                                   |
+| `modules.current`     | `boolean`                                       | `true`                |                           | Enables the hero/current conditions block.                                                                         |
+| `modules.details`     | `{ enabled, fields }`                           | enabled               |                           | Supports `feelsLike`, `humidity`, `wind`, `precip`, `uv`, `shortwaveRadiation`, `cloudCover`, `sunrise`, `sunset`. |
+| `modules.hourly`      | `{ enabled, hours, stepHours }`                 | `12`, `1`             |                           | Works with `6/12/24/48` and `1h/3h` style setups.                                                                  |
+| `modules.daily`       | `{ enabled, days }`                             | `5`                   |                           | Supports short or extended forecast strips.                                                                        |
+| `modules.order`       | `WidgetModuleName[]`                            | layout-specific       |                           | Reorders sections where the layout allows it.                                                                      |
+| `icons`               | `{ style, pack }`                               | animated default pack |                           | Falls back to static when reduced motion is requested.                                                             |
+| `refreshMinutes`      | `number`                                        | `15`                  |                           | Automatic polling; set `0` to disable.                                                                             |
+| `cache`               | `{ enabled, ttlMinutes, staleWhileRevalidate }` | enabled, `15`, `true` |                           | Uses `localStorage` keyed by provider and location.                                                                |
+| `provider`            | `string`                                        | `WeatherProvider`     |                           | `"open-meteo"` Inject a custom provider instance or register one globally.                                         |
+| `apiKey`              | `string`                                        | optional              |                           | Reserved for key-based providers.                                                                                  |
+| `locale`              | `string`                                        | browser locale        |                           | Used for date and time formatting (override to force a specific locale).                                           |
+| `timeFormat`          | `"auto" \| "12h" \| "24h"`                      | `"auto"`              |                           | Controls 12-hour or 24-hour clock display for widget times.                                                        |
+| `themeTokens`         | partial token object                            | optional              |                           | Override colors, radius, or font family.                                                                           |
+| `hooks`               | formatting callbacks                            | optional              |                           | Override temperature and wind formatting.                                                                          |
+| `onError`             | `(error) => void`                               | optional              |                           | Called for fetch or provider failures.                                                                             |
 
 ## Layouts
 
