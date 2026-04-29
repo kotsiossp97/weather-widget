@@ -30,7 +30,6 @@ const THEME_TOKEN_TO_CSS_VAR: Record<
   mutedText: "--ww-muted",
   border: "--ww-border",
   accent: "--ww-accent",
-  accentSoft: "--ww-accent-soft",
   radius: "--ww-radius",
   fontFamily: "--ww-font",
 };

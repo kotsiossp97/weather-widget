@@ -66,7 +66,6 @@ export interface ThemeTokens {
   mutedText: string;
   border: string;
   accent: string;
-  accentSoft: string;
   radius: string;
   fontFamily: string;
 }

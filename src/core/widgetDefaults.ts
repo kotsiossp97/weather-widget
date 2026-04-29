@@ -12,7 +12,6 @@ export const DEFAULT_THEME_TOKENS: ThemeTokens = {
   mutedText: "#5d675e",
   border: "rgba(31, 36, 33, 0.12)",
   accent: "#0d7c66",
-  accentSoft: "rgba(13, 124, 102, 0.16)",
   radius: "28px",
   fontFamily: '"IBM Plex Sans", "Segoe UI", sans-serif',
 };
