@@ -185,6 +185,7 @@ The widget uses CSS variables internally:
 - `--ww-muted`
 - `--ww-border`
 - `--ww-accent`
+- `--ww-accent-soft`
 - `--ww-radius`
 - `--ww-font`
 
