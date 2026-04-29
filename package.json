@@ -1,5 +1,9 @@
 {
   "name": "openmeteo-weather-widget",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kotsiossp97/weather-widget.git"
+  },
   "version": "0.0.1",
   "description": "Framework-agnostic weather widget with ESM, CJS, and CDN bundles.",
   "type": "module",
