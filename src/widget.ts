@@ -7,6 +7,7 @@ import {
   renderLoadingState,
   renderShell,
 } from "./core/widgetRenderers";
+import { preloadWeatherIcons } from "./icons";
 import { deepMerge, resolveElement } from "./core/widgetUtils";
 import type {
   LayoutRenderer,
@@ -235,6 +236,41 @@ export class WeatherWidget {
     }, this.options.refreshMinutes * 60_000);
   }
 
+  private prefersReducedMotion() {
+    return (
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    );
+  }
+
+  private collectPayloadWeatherCodes(payload: WeatherPayload) {
+    const codes: number[] = [];
+
+    if (payload.current) {
+      codes.push(payload.current.weatherCode);
+    }
+
+    for (const hourly of payload.hourly) {
+      codes.push(hourly.weatherCode);
+    }
+
+    for (const daily of payload.daily) {
+      codes.push(daily.weatherCode);
+    }
+
+    return [...new Set(codes)];
+  }
+
+  private async preloadIconsForPayload(payload: WeatherPayload) {
+    await preloadWeatherIcons({
+      codes: this.collectPayloadWeatherCodes(payload),
+      style: this.options.icons.style,
+      colorMode: this.options.icons.colorMode,
+      reducedMotion: this.prefersReducedMotion(),
+      pack: this.options.icons.pack,
+    });
+  }
+
   private render() {
     if (!this.root || !this.data) {
       return;
@@ -261,6 +297,7 @@ export class WeatherWidget {
     const cacheExpired = cache ? cache.expiresAt <= Date.now() : true;
 
     if (cache && !forceNetwork) {
+      await this.preloadIconsForPayload(cache.payload);
       this.data = cache.payload;
       this.isFromCache = true;
       this.render();
@@ -297,6 +334,8 @@ export class WeatherWidget {
       if (this.abortController.signal.aborted || !this.mounted) {
         return;
       }
+
+      await this.preloadIconsForPayload(payload);
 
       this.data = payload;
       this.isFromCache = false;

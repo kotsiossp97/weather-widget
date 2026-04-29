@@ -117,7 +117,7 @@ const normalizeHourly = (json: Record<string, unknown>) => {
     shortwaveRadiation: shortwaveRadiation[index],
     cloudCover: cloudCover[index],
     weatherCode: weatherCodes[index],
-    summary: describeWeatherCode(weatherCodes[index], true),
+    summary: describeWeatherCode(weatherCodes[index], true).description,
   }));
 };
 
@@ -137,7 +137,7 @@ const normalizeDaily = (json: Record<string, unknown>) => {
     temperatureMin: lows[index],
     precipitationProbability: precipitation[index],
     weatherCode: weatherCodes[index],
-    summary: describeWeatherCode(weatherCodes[index], true),
+    summary: describeWeatherCode(weatherCodes[index], true).description,
     sunrise: toUtcIsoString(sunrise[index], `${date}T06:00:00.000Z`),
     sunset: toUtcIsoString(sunset[index], `${date}T18:00:00.000Z`),
   }));
@@ -201,7 +201,7 @@ export const openMeteoProvider: WeatherProvider = {
             shortwaveRadiation: Number(current.shortwave_radiation ?? 0),
             cloudCover: Number(current.cloud_cover ?? 0),
             weatherCode: currentCode,
-            summary: describeWeatherCode(currentCode, isDay),
+            summary: describeWeatherCode(currentCode, isDay).description,
             isDay,
           }
         : undefined,

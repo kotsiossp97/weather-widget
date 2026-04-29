@@ -17,6 +17,24 @@
   overflow: visible;
 }
 
+.ww-icon-themed {
+  color: var(--ww-accent);
+}
+
+.ww-icon-svg,
+.ww-icon-svg-themed,
+.ww-icon-svg-colored {
+  display: block;
+}
+
+.ww-icon-svg-themed [fill]:not([fill="none"]) {
+  fill: currentColor;
+}
+
+.ww-icon-svg-themed [stroke]:not([stroke="none"]) {
+  stroke: currentColor;
+}
+
 .ww-shell {
   @include fill-container;
   background: var(--ww-background);

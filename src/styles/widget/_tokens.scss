@@ -5,7 +5,7 @@
   --ww-muted: #5d675e;
   --ww-border: rgba(31, 36, 33, 0.12);
   --ww-accent: #0d7c66;
-  --ww-accent-soft: rgba(13, 124, 102, 0.16);
+  --ww-accent-soft: color-mix(in srgb, var(--ww-accent) 16%, transparent);
   --ww-white: #fff;
   --ww-scrollbar-track: color-mix(
     in srgb,
@@ -34,7 +34,7 @@
   --ww-muted: #aac0c5;
   --ww-border: rgba(240, 246, 247, 0.12);
   --ww-accent: #6de6c0;
-  --ww-accent-soft: rgba(109, 230, 192, 0.18);
+  --ww-accent-soft: color-mix(in srgb, var(--ww-accent) 18%, transparent);
   --ww-scrollbar-track: color-mix(in srgb, var(--ww-background) 76%, #000 24%);
   --ww-scrollbar-thumb: color-mix(in srgb, var(--ww-accent) 58%, #6f8891);
   --ww-scrollbar-thumb-hover: color-mix(
@@ -56,6 +56,6 @@
     --ww-muted: #aac0c5;
     --ww-border: rgba(240, 246, 247, 0.12);
     --ww-accent: #6de6c0;
-    --ww-accent-soft: rgba(109, 230, 192, 0.18);
+    --ww-accent-soft: color-mix(in srgb, var(--ww-accent) 18%, transparent);
   }
 }

@@ -1,96 +1,167 @@
 import type { IconColorMode, IconPackResolver, IconStyle } from "./types";
 import { escapeHtml } from "./core/widgetUtils";
-import { getWeatherKind } from "./weatherCodes";
+import { describeWeatherCode } from "./weatherCodes";
 
-const importedIconAssets = import.meta.glob("./icons/**/*.svg", {
-  eager: true,
-  import: "default",
-}) as Record<string, string>;
+type IconLoader = () => Promise<string>;
+type IconLoaderMap = Record<string, IconLoader>;
 
-const importedRawIconAssets = import.meta.glob("./icons/**/*.svg", {
-  eager: true,
-  import: "default",
-  query: "?raw",
-}) as Record<string, string>;
+const animatedColoredLoaders = import.meta.glob(
+  "../node_modules/@meteocons/svg/fill/*.svg",
+  { import: "default" }
+) as IconLoaderMap;
 
-const iconAssetFallbackKind = "cloudy";
+const animatedThemedLoaders = import.meta.glob(
+  "../node_modules/@meteocons/svg/monochrome/*.svg",
+  { import: "default", query: "?raw" }
+) as IconLoaderMap;
+
+const staticColoredLoaders = import.meta.glob(
+  "../node_modules/@meteocons/svg-static/fill/*.svg",
+  { import: "default" }
+) as IconLoaderMap;
+
+const staticThemedLoaders = import.meta.glob(
+  "../node_modules/@meteocons/svg-static/monochrome/*.svg",
+  { import: "default", query: "?raw" }
+) as IconLoaderMap;
+
 let inlineSvgInstanceCounter = 0;
 
-const WEATHER_KIND_ALIASES: Record<string, string[]> = {
-  clear: ["clear"],
-  "partly-cloudy": ["partly-cloudy"],
-  cloudy: ["cloudy", "overcast"],
-  fog: ["fog", "mist"],
-  rain: ["rain", "drizzle"],
-  snow: ["snow", "sleet"],
-  storm: ["thunderstorms", "storm"],
+const buildSlugLoaderIndex = (loaders: IconLoaderMap) => {
+  const index = new Map<string, IconLoader>();
+
+  for (const [filePath, loader] of Object.entries(loaders)) {
+    const slug = filePath
+      .split("/")
+      .pop()
+      ?.replace(/\.svg$/i, "")
+      .toLowerCase();
+
+    if (!slug) {
+      continue;
+    }
+
+    index.set(slug, loader);
+  }
+
+  return index;
 };
 
-const rawIconAssetMap = new Map<string, string>(
-  Object.entries(importedRawIconAssets).map(([path, svg]) => {
-    const normalized = path
-      .replace(/^\.\/icons\//, "")
-      .replace(/\.svg$/i, "")
-      .toLowerCase();
-    return [normalized, svg];
-  })
-);
+const LOADER_INDEX: Record<
+  IconStyle,
+  Record<IconColorMode, Map<string, IconLoader>>
+> = {
+  animated: {
+    colored: buildSlugLoaderIndex(animatedColoredLoaders),
+    themed: buildSlugLoaderIndex(animatedThemedLoaders),
+  },
+  static: {
+    colored: buildSlugLoaderIndex(staticColoredLoaders),
+    themed: buildSlugLoaderIndex(staticThemedLoaders),
+  },
+};
 
-const iconAssetMap = new Map<string, string>(
-  Object.entries(importedIconAssets).map(([path, url]) => {
-    const normalized = path
-      .replace(/^\.\/icons\//, "")
-      .replace(/\.svg$/i, "")
-      .toLowerCase();
-    return [normalized, url];
-  })
-);
+const ICON_ASSET_CACHE = new Map<string, string>();
+const ICON_ASSET_PENDING = new Map<string, Promise<string | undefined>>();
 
-const getBundledSvgKey = (input: {
-  kind: string;
-  isDay: boolean;
+const getAssetCacheKey = (
+  style: IconStyle,
+  colorMode: IconColorMode,
+  iconSlug: string
+) => {
+  return `${style}|${colorMode}|${iconSlug.toLowerCase()}`;
+};
+
+const getDefaultIconCandidates = (code: number, isDay: boolean) => {
+  const preferred = describeWeatherCode(code, isDay).iconSlug.toLowerCase();
+  const dayNightFallback = isDay ? "overcast-day" : "overcast-night";
+  const candidates = [preferred, dayNightFallback, "overcast", "cloudy"];
+  return [...new Set(candidates)];
+};
+
+const loadDefaultIconAsset = async (input: {
   style: IconStyle;
   colorMode: IconColorMode;
+  iconSlug: string;
 }) => {
-  const daySuffix = input.isDay ? "-day" : "-night";
-  const kindAliases = WEATHER_KIND_ALIASES[input.kind] ?? [input.kind];
-  const fallbackAliases = WEATHER_KIND_ALIASES[iconAssetFallbackKind] ?? [
-    iconAssetFallbackKind,
-  ];
+  const cacheKey = getAssetCacheKey(
+    input.style,
+    input.colorMode,
+    input.iconSlug
+  );
+  const cached = ICON_ASSET_CACHE.get(cacheKey);
+  if (cached !== undefined) {
+    return cached;
+  }
 
-  const styleCandidates = [input.style, "static"];
-  const modeCandidates: IconColorMode[] = [input.colorMode, "themed"];
+  const pending = ICON_ASSET_PENDING.get(cacheKey);
+  if (pending) {
+    return pending;
+  }
 
-  const candidates: string[] = [];
+  const loader = LOADER_INDEX[input.style][input.colorMode].get(
+    input.iconSlug.toLowerCase()
+  );
+  if (!loader) {
+    return undefined;
+  }
 
-  for (const mode of modeCandidates) {
-    for (const style of styleCandidates) {
-      for (const alias of kindAliases) {
-        candidates.push(`${mode}/${style}/${alias}${daySuffix}`);
-        candidates.push(`${mode}/${style}/${alias}`);
+  const loading = loader()
+    .then(value => {
+      ICON_ASSET_CACHE.set(cacheKey, value);
+      return value;
+    })
+    .catch(() => {
+      return undefined;
+    })
+    .finally(() => {
+      ICON_ASSET_PENDING.delete(cacheKey);
+    });
+
+  ICON_ASSET_PENDING.set(cacheKey, loading);
+  return loading;
+};
+
+const readCachedDefaultIconAsset = (
+  style: IconStyle,
+  colorMode: IconColorMode,
+  iconSlug: string
+) => {
+  return ICON_ASSET_CACHE.get(getAssetCacheKey(style, colorMode, iconSlug));
+};
+
+export const preloadWeatherIcons = async (input: {
+  codes: number[];
+  style: IconStyle;
+  colorMode: IconColorMode;
+  reducedMotion: boolean;
+  pack?: string;
+}) => {
+  if ((input.pack ?? "default") !== "default") {
+    return;
+  }
+
+  const style = input.reducedMotion ? "static" : input.style;
+  const slugs = new Set<string>();
+
+  for (const code of input.codes) {
+    for (const isDay of [true, false]) {
+      const candidates = getDefaultIconCandidates(code, isDay);
+      for (const slug of candidates) {
+        slugs.add(slug);
       }
-
-      for (const fallbackAlias of fallbackAliases) {
-        candidates.push(`${mode}/${style}/${fallbackAlias}${daySuffix}`);
-        candidates.push(`${mode}/${style}/${fallbackAlias}`);
-      }
-    }
-
-    for (const alias of kindAliases) {
-      candidates.push(`${mode}/${alias}${daySuffix}`);
-      candidates.push(`${mode}/${alias}`);
     }
   }
 
-  const dedupedCandidates = [...new Set(candidates)];
-
-  for (const key of dedupedCandidates) {
-    if (iconAssetMap.has(key)) {
-      return key;
-    }
-  }
-
-  return undefined;
+  await Promise.all(
+    [...slugs].map(async iconSlug => {
+      await loadDefaultIconAsset({
+        style,
+        colorMode: input.colorMode,
+        iconSlug,
+      });
+    })
+  );
 };
 
 const escapeRegex = (value: string) => {
@@ -183,28 +254,51 @@ const wrapIconImage = (label: string, size: number, src: string) => {
   return `<img class="ww-icon ww-icon-colored" src="${escapeHtml(src)}" width="${size}" height="${size}" alt="${escapeHtml(label)}" decoding="async" draggable="false" />`;
 };
 
+const resolveDefaultIconMarkup = (input: {
+  code: number;
+  isDay: boolean;
+  label: string;
+  size: number;
+  style: IconStyle;
+  colorMode: IconColorMode;
+}) => {
+  const candidates = getDefaultIconCandidates(input.code, input.isDay);
+
+  for (const iconSlug of candidates) {
+    const cachedAsset = readCachedDefaultIconAsset(
+      input.style,
+      input.colorMode,
+      iconSlug
+    );
+    if (!cachedAsset) {
+      continue;
+    }
+
+    if (input.colorMode === "themed") {
+      return wrapInlineSvg(
+        input.label,
+        input.size,
+        cachedAsset,
+        input.colorMode
+      );
+    }
+
+    return wrapIconImage(input.label, input.size, cachedAsset);
+  }
+
+  return "";
+};
+
 const createBundledPack = (style: IconStyle): IconPackResolver => {
   return ({ code, isDay, label, size, colorMode }) => {
-    const kind = getWeatherKind(code);
-    const bundledSvgKey = getBundledSvgKey({ kind, isDay, style, colorMode });
-
-    if (!bundledSvgKey) {
-      return "";
-    }
-
-    if (colorMode === "themed") {
-      const rawSvg = rawIconAssetMap.get(bundledSvgKey);
-      if (rawSvg) {
-        return wrapInlineSvg(label, size, rawSvg, colorMode);
-      }
-    }
-
-    const bundledSvgUrl = iconAssetMap.get(bundledSvgKey);
-    if (!bundledSvgUrl) {
-      return "";
-    }
-
-    return wrapIconImage(label, size, bundledSvgUrl);
+    return resolveDefaultIconMarkup({
+      code,
+      isDay,
+      label,
+      size,
+      style,
+      colorMode,
+    });
   };
 };
 
@@ -234,6 +328,17 @@ export const resolveWeatherIcon = (input: {
   pack?: string;
   reducedMotion: boolean;
 }) => {
+  // Fire-and-forget hydration in case preload was skipped by host integration.
+  const packageSlug = describeWeatherCode(
+    input.code,
+    input.isDay ?? true
+  ).iconSlug;
+  void loadDefaultIconAsset({
+    style: input.reducedMotion ? "static" : input.style,
+    colorMode: input.colorMode,
+    iconSlug: packageSlug,
+  });
+
   const pack =
     iconPacks.get(input.pack ?? "default") ?? iconPacks.get("default");
   const preferredStyle = input.reducedMotion ? "static" : input.style;
