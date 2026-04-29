@@ -28,7 +28,10 @@
     "**/*.css"
   ],
   "scripts": {
+    "generate:meteocons": "node scripts/generate-meteocon-loaders.mjs",
+    "predev": "npm run generate:meteocons",
     "dev": "vite",
+    "prebuild": "npm run generate:meteocons",
     "build": "vite build && tsc -p tsconfig.build.json",
     "preview": "vite preview",
     "lint:scripts": "eslint . --ext .ts",

@@ -14,6 +14,7 @@ export default defineConfig([
       "**/coverage/**",
       "**/dist/**",
       "**/node_modules/**",
+      "**/generated/**",
     ],
   },
   {

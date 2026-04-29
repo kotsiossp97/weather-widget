@@ -1,34 +1,22 @@
 import type { IconColorMode, IconPackResolver, IconStyle } from "./types";
 import { escapeHtml } from "./core/widgetUtils";
+import {
+  animatedColoredLoaders,
+  animatedThemedLoaders,
+  staticColoredLoaders,
+  staticThemedLoaders,
+  SUPPORTED_METEOCON_SLUGS_SET,
+} from "./generated/meteoconLoaders";
+import type {
+  MeteoconIconLoader,
+  MeteoconLoaderMap,
+} from "./generated/meteoconLoaders";
 import { describeWeatherCode } from "./weatherCodes";
-
-type IconLoader = () => Promise<string>;
-type IconLoaderMap = Record<string, IconLoader>;
-
-const animatedColoredLoaders = import.meta.glob(
-  "../node_modules/@meteocons/svg/fill/*.svg",
-  { import: "default" }
-) as IconLoaderMap;
-
-const animatedThemedLoaders = import.meta.glob(
-  "../node_modules/@meteocons/svg/monochrome/*.svg",
-  { import: "default", query: "?raw" }
-) as IconLoaderMap;
-
-const staticColoredLoaders = import.meta.glob(
-  "../node_modules/@meteocons/svg-static/fill/*.svg",
-  { import: "default" }
-) as IconLoaderMap;
-
-const staticThemedLoaders = import.meta.glob(
-  "../node_modules/@meteocons/svg-static/monochrome/*.svg",
-  { import: "default", query: "?raw" }
-) as IconLoaderMap;
 
 let inlineSvgInstanceCounter = 0;
 
-const buildSlugLoaderIndex = (loaders: IconLoaderMap) => {
-  const index = new Map<string, IconLoader>();
+const buildSlugLoaderIndex = (loaders: MeteoconLoaderMap) => {
+  const index = new Map<string, MeteoconIconLoader>();
 
   for (const [filePath, loader] of Object.entries(loaders)) {
     const slug = filePath
@@ -49,7 +37,7 @@ const buildSlugLoaderIndex = (loaders: IconLoaderMap) => {
 
 const LOADER_INDEX: Record<
   IconStyle,
-  Record<IconColorMode, Map<string, IconLoader>>
+  Record<IconColorMode, Map<string, MeteoconIconLoader>>
 > = {
   animated: {
     colored: buildSlugLoaderIndex(animatedColoredLoaders),
@@ -76,7 +64,9 @@ const getDefaultIconCandidates = (code: number, isDay: boolean) => {
   const preferred = describeWeatherCode(code, isDay).iconSlug.toLowerCase();
   const dayNightFallback = isDay ? "overcast-day" : "overcast-night";
   const candidates = [preferred, dayNightFallback, "overcast", "cloudy"];
-  return [...new Set(candidates)];
+  return [...new Set(candidates)].filter(candidate => {
+    return SUPPORTED_METEOCON_SLUGS_SET.has(candidate);
+  });
 };
 
 const loadDefaultIconAsset = async (input: {
