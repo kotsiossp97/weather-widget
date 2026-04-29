@@ -4,7 +4,7 @@
     "type": "git",
     "url": "https://github.com/kotsiossp97/weather-widget.git"
   },
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Framework-agnostic weather widget with ESM, CJS, and CDN bundles.",
   "type": "module",
   "main": "./dist/index.cjs",
