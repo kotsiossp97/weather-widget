@@ -124,7 +124,7 @@ export class WeatherWidget {
     this.mounted = true;
     this.root.addEventListener("click", this.handleRootClick);
     this.applyContainerState();
-    this.root.innerHTML = renderLoadingState();
+    this.root.innerHTML = renderLoadingState(this.options);
     this.scheduleRefresh();
     void this.loadWeather(false);
   }
@@ -311,7 +311,7 @@ export class WeatherWidget {
     }
 
     if (!this.data) {
-      this.root.innerHTML = renderLoadingState();
+      this.root.innerHTML = renderLoadingState(this.options);
     }
 
     this.abortController?.abort();
@@ -379,7 +379,7 @@ export class WeatherWidget {
     this.abortController?.abort();
 
     if (this.root) {
-      this.root.innerHTML = renderLoadingState();
+      this.root.innerHTML = renderLoadingState(this.options);
     }
 
     void this.loadWeather(false);
