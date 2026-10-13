@@ -1,4 +1,5 @@
-# Weather Widget
+[![](https://data.jsdelivr.com/v1/package/npm/openmeteo-weather-widget/badge)](https://www.jsdelivr.com/package/npm/openmeteo-weather-widget)
+# OpenMeteo Weather Widget
 
 Framework-agnostic weather widget with a small embeddable API for bundlers and plain HTML pages. It ships ESM, CJS, a CDN-friendly UMD bundle, TypeScript declarations, and a generated stylesheet.
 
