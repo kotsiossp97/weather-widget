@@ -2,6 +2,7 @@ import type {
   DetailField,
   LayoutRenderer,
   RenderContext,
+  ResolvedWidgetOptions,
   WidgetModuleName,
 } from "../types";
 import { DEFAULT_LAYOUT_ORDER, DEFAULT_OPTIONS } from "./widgetDefaults";
@@ -355,13 +356,78 @@ export const createDefaultLayouts = () => {
   ]);
 };
 
-export const renderLoadingState = () => {
+const formatCoordinateLabel = (lat: number, lon: number) => {
+  return `${lat.toFixed(2)}, ${lon.toFixed(2)}`;
+};
+
+const renderLocationSwitcher = (
+  tabs: Array<{ index: number; label: string; active: boolean }>,
+  isDisabled: boolean
+) => {
+  if (tabs.length <= 1) {
+    return "";
+  }
+
   return `
-    <div class="ww-loading" aria-live="polite" aria-busy="true">
-      <div class="ww-skeleton ww-skeleton-title"></div>
-      <div class="ww-skeleton ww-skeleton-hero"></div>
-      <div class="ww-skeleton ww-skeleton-grid"></div>
-    </div>
+    <nav class="ww-location-switcher" aria-label="Available locations">
+      ${tabs
+        .map(tab => {
+          return `
+            <button
+              type="button"
+              class="ww-location-chip ${tab.active ? "ww-location-chip-active" : ""}"
+              data-action="switch-location"
+              data-location-index="${tab.index}"
+              aria-pressed="${tab.active ? "true" : "false"}"
+              aria-disabled="${isDisabled ? "true" : "false"}"
+              ${isDisabled ? "disabled" : ""}
+            >
+              ${escapeHtml(tab.label)}
+            </button>
+          `;
+        })
+        .join("")}
+    </nav>
+  `;
+};
+
+export const renderLoadingState = (
+  options?: Pick<
+    ResolvedWidgetOptions,
+    "location" | "locations" | "activeLocationIndex" | "showTitle"
+  >
+) => {
+  const locationTabs = options?.locations
+    ? options.locations.map((location, index) => {
+        const fallback = formatCoordinateLabel(location.lat, location.lon);
+        const label =
+          location.name?.trim() ||
+          (index === options.activeLocationIndex
+            ? options.location.name ?? fallback
+            : fallback);
+
+        return {
+          index,
+          label,
+          active: index === options.activeLocationIndex,
+        };
+      })
+    : [];
+
+  return `
+    <section class="ww-shell">
+      <header class="ww-toolbar">
+        <div class="ww-toolbar-main">
+          ${options?.showTitle ? `<div><h1>${escapeHtml(options.location.name ?? "Weather")} Weather</h1></div>` : ""}
+        </div>
+        ${renderLocationSwitcher(locationTabs, true)}
+      </header>
+      <div class="ww-loading" aria-live="polite" aria-busy="true">
+        <div class="ww-skeleton ww-skeleton-title"></div>
+        <div class="ww-skeleton ww-skeleton-hero"></div>
+        <div class="ww-skeleton ww-skeleton-grid"></div>
+      </div>
+    </section>
   `;
 };
 
@@ -376,28 +442,10 @@ export const renderErrorState = (message: string) => {
 };
 
 export const renderShell = (context: RenderContext, body: string) => {
-  const locationSwitcher =
-    context.locationTabs.length <= 1
-      ? ""
-      : `
-        <nav class="ww-location-switcher" aria-label="Available locations">
-          ${context.locationTabs
-            .map(tab => {
-              return `
-                <button
-                  type="button"
-                  class="ww-location-chip ${tab.active ? "ww-location-chip-active" : ""}"
-                  data-action="switch-location"
-                  data-location-index="${tab.index}"
-                  aria-pressed="${tab.active ? "true" : "false"}"
-                >
-                  ${escapeHtml(tab.label)}
-                </button>
-              `;
-            })
-            .join("")}
-        </nav>
-      `;
+  const locationSwitcher = renderLocationSwitcher(
+    context.locationTabs,
+    context.isRefreshing
+  );
 
   return `
     <section class="ww-shell">
